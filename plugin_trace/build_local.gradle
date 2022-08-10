@@ -1,0 +1,33 @@
+apply plugin: 'maven-publish'
+
+def javadocJar = task("javadocJar", type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+def sourcesJar = task("sourcesJar", type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.java.srcDirs
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            traceTest(MavenPublication) {
+                groupId = 'com.example.traceplugin'
+                artifactId = 'traceTest'
+                version = '1.0.0'
+                from components.java
+
+                artifact sourcesJar
+                artifact javadocJar
+            }
+        }
+        repositories {
+            // 本地仓库位于USER_HOME/.m2/repository
+            mavenLocal()
+            // 其他maven仓库
+            maven { url uri(buildDir.path + '/repo') }
+//            maven { url = layout.buildDirectory.dir("repo") } // build目录的repo文件夹
+        }
+    }
+}

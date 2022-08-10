@@ -1,0 +1,55 @@
+plugins {
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+    id 'groovy' // groovy 支持
+}
+apply plugin: 'kotlin'
+
+apply from :'build_local.gradle'
+
+//gradlePlugin {
+//    plugins {
+//        standaloneGradlePlugins {
+//            id = "com.example.traceplugin"
+//            implementationClass = 'com.example.traceplugin.TestMethodPlugin'
+//        }
+//    }
+//}
+
+gradlePlugin {
+    // 在此处定义该插件的id和实现类
+    plugins {
+        traceTest {
+            id = 'com.example.traceplugin'
+            version "1.0.0"
+            implementationClass = 'com.example.traceplugin.TestMethodPlugin'
+        }
+    }
+}
+
+//sourceSets {
+//    main{
+//        groovy {
+//            srcDir 'src/main/java'
+//        }
+//        resources {
+//            srcDir 'src/main/resources'
+//        }
+//    }
+//}
+
+dependencies {
+    //gradle sdk
+    implementation gradleApi()
+    //groovy sdk
+    implementation localGroovy()
+
+    implementation 'org.ow2.asm:asm:7.2'
+    implementation 'org.ow2.asm:asm-commons:7.2'
+    implementation 'org.ow2.asm:asm-analysis:7.2'
+    implementation 'org.ow2.asm:asm-util:7.2'
+    implementation 'org.ow2.asm:asm-tree:7.2'
+    implementation 'com.android.tools.build:gradle:4.1.2', {
+        exclude group:'org.ow2.asm'
+    }
+}
